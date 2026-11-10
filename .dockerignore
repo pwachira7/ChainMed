@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+.git
+.local
+node_modules
+**/node_modules
+**/dist
+**/artifacts
+**/cache
+output
+playwright-report
+test-results

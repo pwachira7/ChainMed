@@ -7,6 +7,7 @@ import { randomUUID } from "node:crypto";
 import { ZodError } from "zod";
 import { Prisma } from "@prisma/client";
 import pino from "pino";
+import path from "node:path";
 import swaggerUi from "swagger-ui-express";
 import { env } from "./config/index.js";
 import { db } from "./config/db.js";
@@ -58,6 +59,14 @@ app.use("/api/findings", findings);
 app.use("/api/users", users);
 app.use("/api/staff", staff);
 app.use("/api/notifications", notifications);
+if (env.NODE_ENV === "production") {
+  const frontendPath = path.resolve(process.cwd(), "frontend", "dist");
+  app.use(express.static(frontendPath));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
 app.use((_req, _res, next) => next(new HttpError(404, "Endpoint not found")));
 app.use(
   async (

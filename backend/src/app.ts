@@ -4,8 +4,13 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import { randomUUID } from "node:crypto";
+import { createRequire } from "node:module";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client";
+import type { Prisma as PrismaTypes } from "@prisma/client";
+const require = createRequire(import.meta.url);
+const { Prisma } = require("@prisma/client") as {
+  Prisma: typeof PrismaTypes;
+};
 import pino from "pino";
 import path from "node:path";
 import swaggerUi from "swagger-ui-express";

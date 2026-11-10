@@ -1,0 +1,14 @@
+flowchart TB
+ subgraph Developer_machine[Local demonstration machine]
+  B[Browser localhost:5173] --> V[Vite development server]
+  V --> A[Express loopback :4000]
+  A --> PG[PostgreSQL loopback :5432]
+  W[Independent worker process] --> PG
+  W --> H[Hardhat loopback :8545]
+  A --> H
+  H --> S[Deployed registry instance]
+ end
+ subgraph Optional_container
+  D[Docker postgres:16-alpine]
+ end
+ PG -.->|alternative runtime| D

@@ -1,0 +1,42 @@
+classDiagram
+ class User {
+  +String id
+  +Role role
+  +Boolean active
+ }
+ class Incident {
+  +String reference
+  +Status status
+  +Int version
+ }
+ class AuditEvent {
+  +String canonicalPayload
+  +String digest
+  +String previousDigest
+ }
+ class BlockchainAnchor {
+  +AnchorStatus status
+  +String transactionHash
+  +Int attempts
+ }
+ class VerificationService {
+  +verifyEvent()
+  +verifyBatch()
+ }
+ class Chain {
+  +ready()
+  +get()
+  +inventory()
+ }
+ class Finding {
+  +String result
+  +String severity
+  +String status
+  +Json notes
+ }
+ User "1" --> "many" Incident : reports
+ Incident --> AuditEvent : generates
+ AuditEvent --> BlockchainAnchor : queued commitment
+ VerificationService --> AuditEvent : reconstructs
+ VerificationService --> Chain : reads independent evidence
+ VerificationService --> Finding : creates

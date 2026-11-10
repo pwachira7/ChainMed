@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum Role {
+  ADMIN
+  STAFF
+  AUDITOR
+  CITIZEN
+}
+enum IncidentStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+enum AnchorStatus {
+  PENDING
+  SUBMITTED
+  CONFIRMED
+  FAILED
+}
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String
+  passwordHash String
+  role Role @default(CITIZEN)
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  sessions Session[]
+  resets PasswordReset[]
+  incidents Incident[] @relation("Reporter")
+  assigned Incident[] @relation("Assignee")
+  notes OperationalNote[]
+  notifications Notification[]
+}
+model Session {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  tokenHash String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+  @@index([userId])
+}
+model PasswordReset {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  tokenHash String @unique
+  expiresAt DateTime
+  usedAt DateTime?
+}
+model Incident {
+  id String @id @default(uuid())
+  reference String @unique
+  reporterId String
+  reporter User @relation("Reporter", fields: [reporterId], references: [id])
+  assigneeId String?
+  assignee User? @relation("Assignee", fields: [assigneeId], references: [id])
+  category String
+  description String
+  location String
+  contact String?
+  urgency String
+  status IncidentStatus @default(SUBMITTED)
+  version Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  notes OperationalNote[]
+  history IncidentStatusHistory[]
+  assignments IncidentAssignment[]
+  @@index([reporterId, createdAt])
+  @@index([assigneeId, status])
+}
+model IncidentAssignment {
+  id String @id @default(uuid())
+  incidentId String
+  incident Incident @relation(fields: [incidentId], references: [id])
+  staffId String
+  assignedBy String
+  createdAt DateTime @default(now())
+}
+model IncidentStatusHistory {
+  id String @id @default(uuid())
+  incidentId String
+  incident Incident @relation(fields: [incidentId], references: [id])
+  fromStatus String?
+  toStatus String
+  actorId String
+  createdAt DateTime @default(now())
+}
+model OperationalNote {
+  id String @id @default(uuid())
+  incidentId String
+  incident Incident @relation(fields: [incidentId], references: [id])
+  authorId String
+  author User @relation(fields: [authorId], references: [id])
+  text String
+  createdAt DateTime @default(now())
+}
+model AuditEvent {
+  id String @id
+  timestamp DateTime
+  actorId String?
+  actorRole String
+  action String
+  resourceType String
+  resourceId String
+  outcome String
+  requestId String
+  metadata Json
+  canonicalPayload String
+  digest String
+  previousDigest String?
+  @@index([timestamp])
+  @@index([action, actorRole])
+}
+model BlockchainAnchor {
+  id String @id @default(uuid())
+  eventId String @unique
+  digest String
+  status AnchorStatus @default(PENDING)
+  transactionHash String?
+  blockNumber Int?
+  attempts Int @default(0)
+  nextAttemptAt DateTime @default(now())
+  leaseUntil DateTime?
+  lastError String?
+  createdAt DateTime @default(now())
+  confirmedAt DateTime?
+  @@index([status, nextAttemptAt])
+}
+model IntegrityVerificationRun {
+  id String @id @default(uuid())
+  requestedBy String?
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+  results Json?
+  findings IntegrityVerificationFinding[]
+}
+model IntegrityVerificationFinding {
+  id String @id @default(uuid())
+  runId String
+  run IntegrityVerificationRun @relation(fields: [runId], references: [id])
+  eventId String
+  result String
+  severity String
+  status String @default("OPEN")
+  detail String
+  notes Json @default("[]")
+  detectedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([eventId, status])
+}
+model Notification {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  findingId String
+  title String
+  readAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId, readAt])
+}
+model IdempotencyKey {
+  key String @id
+  userId String
+  requestHash String
+  resourceId String
+  createdAt DateTime @default(now())
+}

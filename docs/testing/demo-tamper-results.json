@@ -1,0 +1,11 @@
+{
+  "executedAt": "2026-10-27T18:58:55.495Z",
+  "runId": "aa882219-a599-4e63-81d0-8bd179c29836",
+  "results": [
+    {
+      "eventId": "34701675-f0b8-4ef2-904a-39c085f075e1",
+      "result": "HASH_MISMATCH",
+      "detail": "Reconstructed record, stored digest, canonical payload or chain commitment differ. Preserve evidence and investigate privileged writes."
+    }
+  ]
+}

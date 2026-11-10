@@ -1,0 +1,21 @@
+flowchart LR
+ subgraph Frontend
+  ROUTES[Protected routes] --> FORMS[Role-aware forms and tables]
+  FORMS --> CLIENT[API client with in-memory bearer]
+ end
+ subgraph Backend
+  MW[Security middleware] --> AUTH[Auth router]
+  MW --> OPS[Incident router]
+  MW --> AUDIT[Evidence and finding routes]
+  OPS --> CAPTURE[Canonical audit service]
+  AUTH --> CAPTURE
+  AUDIT --> VERIFY[Verification service]
+  VERIFY --> CAPTURE
+  CAPTURE --> PRISMA[Prisma]
+ end
+ CLIENT --> MW
+ PRISMA --> DB[(PostgreSQL)]
+ WORKER[Background worker] --> DB
+ WORKER --> ETH[Ethers registry adapter]
+ VERIFY --> ETH
+ ETH --> SOL[Solidity registry]

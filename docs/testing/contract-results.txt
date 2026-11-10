@@ -1,0 +1,22 @@
+
+> chainmed@1.0.0 test:contract
+> npm test -w blockchain
+
+
+> @chainmed/blockchain@1.0.0 test
+> hardhat test
+
+
+
+
+
+  ChainMedAuditRegistry
+    ✔ anchors, enumerates, rejects duplicates and unauthorized writers (631ms)
+
+  Registry input and governance
+    ✔ rejects empty commitments and zero writer addresses
+    ✔ transfers governance only to a nonzero owner
+
+
+  3 passing (655ms)
+

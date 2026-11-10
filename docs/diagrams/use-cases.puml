@@ -1,0 +1,29 @@
+@startuml
+left to right direction
+actor Citizen
+actor "Care Staff" as Staff
+actor Administrator as Admin
+actor Auditor
+rectangle ChainMed {
+ usecase "Register and sign in" as Login
+ usecase "Submit and track own report" as Report
+ usecase "Manage assigned care response" as Care
+ usecase "Assign staff and manage access" as Access
+ usecase "Review and verify audit evidence" as Verify
+ usecase "Investigate integrity findings" as Investigate
+ usecase "Automatic audit and anchoring" as Audit
+}
+Citizen --> Login
+Citizen --> Report
+Staff --> Login
+Staff --> Care
+Admin --> Access
+Admin --> Care
+Admin --> Verify
+Auditor --> Verify
+Auditor --> Investigate
+Report ..> Audit : <<include>>
+Care ..> Audit : <<include>>
+Access ..> Audit : <<include>>
+Investigate ..> Audit : <<include>>
+@enduml

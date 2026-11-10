@@ -1,0 +1,22 @@
+flowchart TD
+ A[Citizen submits report] --> B[Submitted]
+ B --> C[Admin review]
+ C --> D[Under review]
+ D --> E[Admin assigns active staff]
+ E --> F[Assigned]
+ F --> G[Assigned staff starts response]
+ G --> H[In progress]
+ H --> I[Resolved]
+ I --> J[Closed]
+ I --> H
+ B -.-> K[Transactional audit capture]
+ E -.-> K
+ H -.-> K
+ K --> L[Durable anchoring]
+ L --> M[Integrity verification]
+ M --> N{Evidence matches?}
+ N -->|Yes| O[Verified]
+ N -->|Mismatch or missing| P[Finding and notification]
+ N -->|Infrastructure unavailable| Q[Warning and retry]
+ P --> R[Investigation with justification]
+ R --> K

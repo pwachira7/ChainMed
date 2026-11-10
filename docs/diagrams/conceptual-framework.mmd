@@ -1,0 +1,11 @@
+flowchart LR
+  A[Care operations and user actions] --> B[Authentication and RBAC]
+  B --> C[Transactional audit capture]
+  C --> D[Canonical SHA-256 commitment]
+  D --> E[Authorized blockchain registry]
+  C --> F[PostgreSQL evidence]
+  E --> G[Integrity verification]
+  F --> G
+  G --> H[Findings and notifications]
+  H --> I[Auditor investigation and documented outcome]
+  I --> C

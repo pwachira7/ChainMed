@@ -1,0 +1,23 @@
+sequenceDiagram
+ actor Citizen
+ participant UI as Browser
+ participant API as Express + RBAC
+ participant DB as PostgreSQL
+ participant W as Outbox worker
+ participant C as Registry
+ actor Auditor
+ Citizen->>UI: Submit fictional report
+ UI->>API: POST incident + bearer + idempotency key
+ API->>DB: Begin transaction
+ API->>DB: Incident + timeline + audit + pending outbox
+ API->>DB: Commit
+ API-->>UI: Reference and status
+ W->>DB: Claim eligible jobs under signer lock
+ W->>C: Check UUID; anchor digest if absent
+ C-->>W: Transaction receipt
+ W->>DB: Confirm anchor, commit queue updates
+ Auditor->>API: Verify full inventory
+ API->>C: Enumerate UUIDs and read commitments
+ API->>DB: Reconstruct canonical evidence
+ API->>DB: Persist run, findings and notifications
+ API-->>Auditor: Verification results and next steps

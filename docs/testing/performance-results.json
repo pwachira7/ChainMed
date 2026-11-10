@@ -1,0 +1,39 @@
+{
+  "measuredAt": "2026-10-27T18:56:30.999Z",
+  "node": "v25.5.0",
+  "environment": "Local macOS PostgreSQL + Hardhat single node, sequential requests; not production benchmarks",
+  "method": "Baseline SELECT 1 transaction compared with audit+outbox transaction; anchor queue includes all outstanding test-schema jobs; API measurement is health endpoint only",
+  "healthApiMeanMs": 1.6372498499998982,
+  "results": [
+    {
+      "volume": 10,
+      "baselineTransactionMeanMs": 1.5389042000000017,
+      "auditTransactionMeanMs": 1.4148499000000072,
+      "incrementalAuditMeanMs": -0.12405429999999451,
+      "anchorQueueDurationMs": 1319.328084,
+      "anchorMeanMs": 131.9328084,
+      "verificationDurationMs": 350.5385839999999,
+      "verificationMeanMs": 35.05385839999999
+    },
+    {
+      "volume": 50,
+      "baselineTransactionMeanMs": 0.22734671999999592,
+      "auditTransactionMeanMs": 0.8540907999999672,
+      "incrementalAuditMeanMs": 0.6267440799999713,
+      "anchorQueueDurationMs": 3912.6431249999996,
+      "anchorMeanMs": 78.25286249999999,
+      "verificationDurationMs": 1926.4666669999997,
+      "verificationMeanMs": 38.529333339999994
+    },
+    {
+      "volume": 100,
+      "baselineTransactionMeanMs": 0.209827450000048,
+      "auditTransactionMeanMs": 0.7897370900000169,
+      "incrementalAuditMeanMs": 0.5799096399999689,
+      "anchorQueueDurationMs": 8793.846583999999,
+      "anchorMeanMs": 87.93846583999999,
+      "verificationDurationMs": 4018.579125,
+      "verificationMeanMs": 40.18579125
+    }
+  ]
+}

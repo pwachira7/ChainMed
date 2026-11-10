@@ -1,0 +1,13 @@
+flowchart TB
+  UI[React role-aware browser] --> API[Express REST API]
+  API --> AUTH[JWT sessions and RBAC]
+  API --> OPS[Care operations]
+  OPS --> TX[Atomic incident + audit + outbox transaction]
+  TX --> DB[(PostgreSQL)]
+  DB --> WORKER[Durable anchoring worker]
+  WORKER --> REG[ChainMedAuditRegistry]
+  API --> VERIFY[Integrity verification engine]
+  VERIFY --> REG
+  VERIFY --> DB
+  VERIFY --> FEEDBACK[Findings and notifications]
+  FEEDBACK --> UI

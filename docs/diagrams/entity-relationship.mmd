@@ -1,0 +1,14 @@
+erDiagram
+ User ||--o{ Session : owns
+ User ||--o{ PasswordReset : requests
+ User ||--o{ Incident : reports
+ User o|--o{ Incident : assigned
+ User ||--o{ OperationalNote : authors
+ Incident ||--o{ IncidentAssignment : records
+ Incident ||--o{ IncidentStatusHistory : tracks
+ Incident ||--o{ OperationalNote : contains
+ AuditEvent ||..|| BlockchainAnchor : "opaque UUID without cascade"
+ IntegrityVerificationRun ||--o{ IntegrityVerificationFinding : detects
+ User ||--o{ Notification : receives
+ IntegrityVerificationFinding ||..o{ Notification : references
+ User ||..o{ IdempotencyKey : scopes
